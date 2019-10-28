@@ -1,9 +1,10 @@
-import React from "react";
+import React, { Fragment } from "react";
 import ReactDOM from "react-dom";
-
 import tweets from "./tweets.json";
+import dayListItem from './components/DayListItem.js';
 
 import "./styles.css";
+import DayListItem from "./components/DayListItem.js";
 
 function Tweet(props) {
   return(
@@ -40,7 +41,20 @@ function TweetList(props) {
   return tweets;
 }
 
+const setDay = () => {
+  console.log("I'm running");
+}
+
 ReactDOM.render(
-  <TweetList tweets={tweets} />,
+  <Fragment>
+    <TweetList tweets={tweets} />
+    <DayListItem
+      name="Monday"
+      spots={5}
+      selected={false}
+      setDay={setDay}
+    />
+  </Fragment>,
+  
   document.getElementById("root")
 );

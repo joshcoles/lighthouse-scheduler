@@ -1,59 +1,37 @@
-@import url("https://fonts.googleapis.com/css?family=Overpass");
+@import "~normalize.css/normalize.css";
+
+@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,900");
+
+@import "styles/variables.scss";
+@import "styles/reset.scss";
+
+@import "styles/typography.scss";
 
 * {
   box-sizing: border-box;
 }
 
 body {
-  font-family: Overpass, sans-serif;
-  margin: 1rem;
-  background-color: rgb(34, 47, 62);
+  font-family: $font-family;
 }
 
-h2 {
-  margin: 0;
-}
-
-.tweets {
+.layout {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  min-height: 100vh;
 }
 
-.tweet {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 2rem;
-  max-width: 450px;
-  background-color: #f2f2f2;
-  border-radius: 1rem;
-  color: rgb(34, 47, 62);
+@media only screen and (max-width: 960px) {
+  html {
+    font-size: 12px;
+  }
+
+  .layout {
+    flex-direction: column;
+  }
 }
 
-.tweet__header {
-  display: flex;
-  background-color: rgb(29, 209, 161);
-  padding: 1rem;
-  color: #fff;
-  align-items: center;
-  border-radius: 1rem 1rem 0 0;
-}
-
-.tweet__header-avatar {
-  border-radius: 50%;
-  width: 64px;
-  height: 64px;
-  margin-right: 1rem;
-  border: #fff solid 0.25rem;
-}
-
-.tweet__content {
-  padding: 1rem;
-}
-
-.tweet__footer {
-  padding: 1rem;
-  background-color: rgb(29, 209, 161);
-  border-radius: 0 0 1rem 1rem;
-  color: #fff;
+@media only screen and (max-width: 320px) {
+  html {
+    font-size: 10px;
+  }
 }

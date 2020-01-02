@@ -55,14 +55,13 @@ const appointments = [
 export default function Application(props) {
 
   const [days, setDays] = useState([]);
-
   const [day, setDay] = useState('Monday');
 
   useEffect(() => {
     axios.get('http://localhost:8001/api/days').then((res) => {
-      setDays(res.data);
-    }, []);
-  })
+      return setDays(res.data);
+    });
+  }, []);
 
   return (
     <main className="layout">

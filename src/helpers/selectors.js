@@ -1,6 +1,5 @@
 export const getAppointmentsForDay = (state, day) => {
   
-
   const appointmentsThatDay = [];
 
   // For each day, check to see if its name matches the given day name

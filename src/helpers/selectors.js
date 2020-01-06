@@ -21,6 +21,26 @@ export const getAppointmentsForDay = (state, day) => {
 
 };
 
+export const getInterviewersForDay = (state, day) => {
+  
+  // Same logic as for appointments
+  const interviewersForDay = [];
+
+  state.days.forEach((dayOfWeek) => {
+
+    if (dayOfWeek.name === day) {
+
+      dayOfWeek.interviewers.forEach((interviewerId) => {
+        interviewersForDay.push(state.interviewers[interviewerId]);
+      })
+    }
+    
+  });
+ 
+  return interviewersForDay.length ? interviewersForDay : [];
+
+}
+
 export const getInterview = (state, interview) => {
 
   if (interview) {

@@ -10,16 +10,22 @@ import useVisualMode from '../../hooks/useVisualMode';
 
 export default function Appointment(props) {
 
+  // Each constant to be used to flag a different state when rendering components below
+  // Note that different constants can be used for the same component but in a different way
   const EMPTY = "EMPTY";
   const SHOW = "SHOW";
   const CREATE = "CREATE";
   const SAVING = "SAVING";
   const DELETING = "DELETING";
   const CONFIRM = "CONFIRM";
+  const EDIT = "EDIT";
 
+  // Import custom hooks that help flag
   const { mode, transition, back } = useVisualMode(props.interview ? SHOW : EMPTY);
 
-  const save = (name, interviewer) => {
+
+  // Fired on click to 'Confirm' on Form component
+  const save = (name, interviewer) => {  
     
     transition(SAVING); 
 
@@ -28,13 +34,14 @@ export default function Appointment(props) {
       interviewer
     };
 
+    // Hit API with updated interview then transition to show update
     props.bookInterview(props.id, interview)
-      .then(() => {
-        transition(SHOW);
-      })
+      .then(() => transition(SHOW));
   }
 
+  const edit = () => transition(EDIT);
   const cancel = () => transition(CONFIRM);
+
 
   const confirmDelete = () => {
 
@@ -61,11 +68,12 @@ export default function Appointment(props) {
           student={props.interview.student}
           interviewer={props.interview.interviewer}
           onDelete={cancel}
+          onEdit={edit}
         />
       )}
 
       {mode === CREATE && (
-        <Form 
+        <Form
           interviewers={props.interviewers}
           onCancel={cancel}
           onSave={save}
@@ -80,6 +88,17 @@ export default function Appointment(props) {
           message="Are you sure you would like to delete?" 
           onCancel={cancelDelete}
           onConfirm={confirmDelete}
+        />
+      )}
+
+      {mode === EDIT && (
+        <Form
+          interviewers={props.interviewers}
+          onCancel={cancel}
+          onSave={save}
+          editing={true}
+          interviewer={props.interview.interviewer.id}
+          name={props.interview.student}
         />
       )}
 

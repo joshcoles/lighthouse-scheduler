@@ -6,6 +6,7 @@ import Empty from './Empty';
 import Form from './Form';
 import Status from './Status';
 import Confirm from './Confirm';
+import Error from './Error';
 import useVisualMode from '../../hooks/useVisualMode';
 
 export default function Appointment(props) {
@@ -19,6 +20,8 @@ export default function Appointment(props) {
   const DELETING = "DELETING";
   const CONFIRM = "CONFIRM";
   const EDIT = "EDIT";
+  const ERROR_SAVE = "ERROR_SAVE";
+  const ERROR_DELETE = "ERROR_DELETE";
 
   // Import custom hooks that help flag
   const { mode, transition, back } = useVisualMode(props.interview ? SHOW : EMPTY);
@@ -28,16 +31,17 @@ export default function Appointment(props) {
   // Fired on click to 'Confirm' on Form component
   const save = (name, interviewer) => {  
     
-    transition(SAVING); 
-
     const interview = {
       student: name,
       interviewer
     };
 
+    transition(SAVING);
+
     // Hit API with updated interview then transition to show update
     props.bookInterview(props.id, interview)
-      .then(() => transition(SHOW));
+      .then(() => transition(SHOW))
+      .catch(error => transition(ERROR_SAVE, true));
   }
 
   // Display Form component * with * current name and interviewer
@@ -52,12 +56,11 @@ export default function Appointment(props) {
   // Trigger actual delete functionality from within confirm prompt
   const confirmDelete = () => {
 
-    transition(DELETING);
+    transition(DELETING, true);
 
     props.cancelInterview(props.id)
-      .then(() => {
-        transition(EMPTY)
-      });
+      .then(() => transition(EMPTY))
+      .catch(error => transition(ERROR_DELETE, true));
   }
 
   return (
@@ -103,6 +106,20 @@ export default function Appointment(props) {
           name={props.interview.student}
         />
       )}
+
+      {mode === ERROR_DELETE && (
+        <Error
+          message="Could not cancel appointment"
+          onClose={() => back(SHOW)}
+        />
+      )}
+
+      {mode === ERROR_SAVE && (
+				<Error
+					message="Error in editing the interview"
+					onClose={() => back()}
+				/>
+			)}
 
     </div>
   )

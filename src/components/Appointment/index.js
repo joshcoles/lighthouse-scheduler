@@ -23,6 +23,7 @@ export default function Appointment(props) {
   // Import custom hooks that help flag
   const { mode, transition, back } = useVisualMode(props.interview ? SHOW : EMPTY);
 
+  const add = () => transition(CREATE);
 
   // Fired on click to 'Confirm' on Form component
   const save = (name, interviewer) => {  
@@ -39,10 +40,16 @@ export default function Appointment(props) {
       .then(() => transition(SHOW));
   }
 
+  // Display Form component * with * current name and interviewer
   const edit = () => transition(EDIT);
-  const cancel = () => transition(CONFIRM);
 
+  // Show confirm prompt when user clicks delete icon
+  const deleteItem = () => transition(CONFIRM);
 
+  // Exit confirm prompt
+  const cancel = () => back();
+
+  // Trigger actual delete functionality from within confirm prompt
   const confirmDelete = () => {
 
     transition(DELETING);
@@ -53,25 +60,14 @@ export default function Appointment(props) {
       });
   }
 
-  const cancelDelete = () => {
-    back();
-  }
-
   return (
     <div className="appointment">
       <Header time={props.time}/>
 
-      {mode === EMPTY && <Empty onAdd={() => transition(CREATE)} />}
+      {mode === EMPTY && <Empty onAdd={add} />}
+      {mode === SAVING && <Status message="Saving" />}
+      {mode === DELETING && <Status message="Deleting" />}
       
-      {mode === SHOW && (
-        <Show
-          student={props.interview.student}
-          interviewer={props.interview.interviewer}
-          onDelete={cancel}
-          onEdit={edit}
-        />
-      )}
-
       {mode === CREATE && (
         <Form
           interviewers={props.interviewers}
@@ -79,14 +75,20 @@ export default function Appointment(props) {
           onSave={save}
           />
       )}
-      
-      {mode === SAVING && <Status message="Saving" />}
-      {mode === DELETING && <Status message="Deleting" />}
 
+      {mode === SHOW && (
+        <Show
+          student={props.interview.student}
+          interviewer={props.interview.interviewer}
+          onDelete={deleteItem}
+          onEdit={edit}
+        />
+      )}
+      
       {mode === CONFIRM && (
         <Confirm
           message="Are you sure you would like to delete?" 
-          onCancel={cancelDelete}
+          onCancel={cancel}
           onConfirm={confirmDelete}
         />
       )}
